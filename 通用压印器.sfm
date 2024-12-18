@@ -1,0 +1,16 @@
+name "通用压印器"
+
+every 1 ticks do 
+    input fe:: from "能量立方" top side
+    output fe:: to each "压印器" top side
+end
+
+
+every 20 ticks do 
+    input from "原料"
+    output  to each "压印器" top side
+    forget
+    input from each "压印器" top side
+    output to "样板提供器"
+    forget
+end

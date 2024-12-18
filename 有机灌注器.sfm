@@ -1,0 +1,41 @@
+name "有机灌注程序"
+
+every 1 ticks do 
+    input fe:: from "能量立方" top side
+    output fe:: to "有机灌注"
+end
+
+every 20 ticks do
+    input fluid:: from "水槽"
+    output fluid:: to each "有机灌注" top side
+    forget
+
+    input *seeds from each "有机灌注" top side
+    output to "种子箱"
+    forget
+
+    input except *seed from each "有机灌注" top side slots 2-5
+    output to "成品箱"
+    forget
+
+    input from "金坷垃" 
+    output  to each "有机灌注" top side slots 1
+    forget
+
+    input retain 6 *dirt_seeds from "种子箱" 
+    input retain 2 *dye_seeds from "种子箱" 
+    input retain 6 *apatite_seeds from "种子箱" 
+    input retain 6 *saltpeter_seeds from "种子箱" 
+    input retain 2 *glowstone_seeds from "种子箱" 
+    input retain 2 *fire_seeds from "种子箱" 
+    input retain 2 *amethyst_seeds from "种子箱" 
+    input retain 2 *compressed_iron_seeds from "种子箱" 
+    input retain 2 *nature_seeds from "种子箱"
+    input retain 6 *iron_seeds from "种子箱"
+    input retain 6 *quartz_seeds from "种子箱"
+    output to "垃圾桶"
+    forget
+
+    input *seeds from "种子箱"
+    output  retain 2 to each "有机灌注" top side slots 0
+end

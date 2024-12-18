@@ -1,0 +1,18 @@
+NAME "mock"
+
+every 20 ticks do
+    input fe:: from cube top side
+    output fe:: to mock
+end
+
+
+every 100 ticks do 
+    input from port
+    output to mock
+    forget
+    input from mock
+    output to box top side
+end
+
+
+
