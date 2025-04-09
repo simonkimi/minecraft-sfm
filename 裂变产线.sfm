@@ -1,0 +1,101 @@
+name "裂变燃料产线"
+
+every 1 ticks do
+    input fe:: from "能量立方" top side
+    output fe:: to each "富集场" bottom side
+    output fe:: to each "氧化机铀黄饼" bottom side
+    output fe:: to each "电解机" bottom side
+    output fe:: to each "水蒸气蒸发器" bottom side
+    output fe:: to each "氧化机二氧化硫" bottom side
+    output fe:: to each "灌注机三氧化硫" bottom side
+    output fe:: to each "灌注机硫酸" bottom side
+    output fe:: to each "氢氟酸化学溶解室" bottom side
+    output fe:: to each "灌注机六氟化铀" bottom side
+    output fe:: to each "同位素离心机" bottom side
+end
+
+
+-- 氧化铀产线
+every redstone pulse do
+     -- 铀 -> 铀黄饼
+    input from "接口"
+    output item:alltheores:uranium_ingot to each "富集场" bottom side
+    forget
+
+    -- 铀黄饼 -> 氧化铀
+    input from "富集场" top side
+    output to each "氧化机铀黄饼" bottom side
+    forget
+    input gas:: from "氧化机铀黄饼" top side
+    output gas:: to each "氧化铀缓存" bottom side
+    forget
+
+    -- 电解产线
+    input fluid:: from "水槽"
+    output fluid:: to each "电解机" bottom side
+    input gas:: from "电解机" top side
+    output gas:*:oxygen  to "氧气缓存" bottom side
+    forget
+
+    -- 水蒸气产线
+    input fluid:: from "水槽"
+    output fluid:: to each "水蒸气蒸发器" bottom side
+    input gas:: from "水蒸气蒸发器" top side
+    output gas:: to each "水蒸气缓存" bottom side
+    forget
+
+    -- 硫粉 氧化 -> 二氧化硫
+    input from "接口"
+    output with tag #forge:dusts/sulfur to each "氧化机二氧化硫" bottom side
+    input gas:: from "氧化机二氧化硫" top side
+    output gas:: to "二氧化硫缓存" bottom side 
+    forget
+    
+
+    -- 二氧化硫 + 氧气 -> 三氧化硫
+    input gas:: from "二氧化硫缓存" top side
+    input gas:: from "氧气缓存" top side
+    output gas:: to each "灌注机三氧化硫" north,south,east,west side
+    forget
+    input gas:: from "灌注机三氧化硫" top side
+    output gas:: to each "三氧化硫缓存" bottom side
+    forget
+
+    -- 三氧化硫 + 水 -> 硫酸
+    input gas:: from "三氧化硫缓存" top side
+    input gas:: from "水蒸气缓存" top side
+    output gas:: to each "灌注机硫酸" north,south,east,west side
+    forget
+    input gas:: from "灌注机硫酸" top side
+    output gas:: to each "硫酸缓存" bottom side
+    forget
+
+    -- 硫酸 + 氟石 -> 氢氟酸
+    input gas:: from "硫酸缓存" top side
+    input from "接口" top side
+    output gas:: to "氢氟酸化学溶解室" north,south,east,west side
+    output item:gtceu:fluorite_block to "氢氟酸化学溶解室" north,south,east,west side
+    forget
+    input gas:: from "氢氟酸化学溶解室" top side
+    output gas:: to each "氢氟酸缓存" bottom side
+    forget
+
+    -- 氢氟酸 + 氧化铀 -> 六氟化铀
+    input gas:: from "氢氟酸缓存" top side
+    input gas:: from "氧化铀缓存" top side
+    output gas:: to each "灌注机六氟化铀" north,south,east,west side
+    forget
+    input gas:: from "灌注机六氟化铀" top side
+    output gas:: to each "六氟化铀缓存" bottom side
+    forget
+
+
+    -- 六氟化铀 -> 裂变燃料
+    input gas:: from "六氟化铀缓存" top side
+    output gas:: to each "同位素离心机" bottom side
+    forget
+    input gas:: from "同位素离心机" bottom side
+    output gas:: to each "成品" bottom side
+end
+
+
